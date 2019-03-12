@@ -1,0 +1,26 @@
+body {
+	background: url('images/star_field.png'); 
+	background-size: cover;
+}
+
+.jumbotron {
+  color: lightgrey;
+}
+
+.jumbotron-heading {
+  font-weight: 300;
+}
+
+.jumbotron .container {
+  max-width: 51rem;
+}
+
+.monoton {
+	font-size: 85px; 
+	font-family: 'Monoton', cursive;
+}
+
+header h3 a, header a { 
+	font-family: 'Monoton', cursive;
+	color: lightgrey;
+ }

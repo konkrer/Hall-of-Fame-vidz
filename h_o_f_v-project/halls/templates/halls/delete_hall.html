@@ -1,0 +1,25 @@
+{% extends 'halls/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-dark text-light border-bottom border-primary my-2 py-2">
+	<div class="container ">
+		<h2 class="display-4 text-center text-light">Delete Hall?</h2>
+		<h2 class="text-center text-info mb-5 border border-danger rounded-pill" style=" font-size: 50px; font-family: 'Monoton', cursive;">{{ hall.title }}</h2>
+		{% if user.is_authenticated %}
+		<div class="row justify-content-center">
+			<form method="post">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<button type="submit" class="btn btn-outline-danger btn-outline">Delete Hall</button>	
+			</form>
+		</div>
+		{% else %}
+		<h2 class="text-center text-danger">Please Login or Sign Up!<h2>
+		{% endif %}
+		<br>
+		<h6 class="mt-1">Go back to <a href="{% url 'detail_hall' hall.id %}">{{ hall.title }}</a></h2>
+	</div>
+</div>
+
+{% endblock %}

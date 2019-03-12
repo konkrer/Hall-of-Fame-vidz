@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+{% load staticfiles %}
+
+<head>
+  <title>Hall of Fame Vidz</title>
+  <style>
+    body a, body { 
+  color: green !important;
+ }
+  </style>
+</head>
+
+<body >
+  <header>
+    <h3>Hall of Fame vidz</h3>
+    <nav>
+      {% if user.is_authenticated %}
+      <a>Dashboard</a>
+      <a>Log Out</a>
+      {% else %}
+      <a>Log In</a>
+      {% endif %}
+    </nav>
+    {% if user.is_authenticated == False %}
+    <a href="{% url 'signup' %}">Sign Up</a>
+    {% endif %}
+  </header>
+</body>
+</html>

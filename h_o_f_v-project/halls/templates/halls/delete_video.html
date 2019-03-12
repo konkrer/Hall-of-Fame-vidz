@@ -1,0 +1,29 @@
+{% extends 'halls/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-dark text-light border-bottom border-primary my-2 py-2">
+	<div class="container ">
+		<h2 class="display-4 text-center text-light">Delete Video?</h2>
+		<h2 class="text-center text-info mb-3 px-5 py-3 border border-danger rounded-pill" style=" font-size: 50px; font-family: 'Monoton', cursive; overflow: hidden; word-spacing: .2em;">{{ video.title }}</h2>
+		{% if user.is_authenticated %}
+		<div class="row justify-content-center">
+			<form method="post">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<button type="submit" class="btn btn-outline-danger btn-outline">Delete Video</button>	
+			</form>
+		</div>
+		{% else %}
+		<h2 class="text-center text-danger">Please Login or Sign Up!<h2>
+		{% endif %}
+		<h6 class="text-right mt-0"><a href="{% url 'dashboard' %}">Go back to Dashboard ></a></h2>
+	</div>
+</div>
+<div class="container mt-4">
+	<div class="row justify-content-center">
+		<iframe width="650" height="450" src="https://www.youtube.com/embed/{{ video.youtube_id }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
+	</div>
+</div>
+
+{% endblock %}

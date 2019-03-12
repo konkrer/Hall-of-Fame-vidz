@@ -1,0 +1,64 @@
+{% extends 'halls/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<section class="jumbotron jumbotron-fluid text-center bg-dark border-bottom border-top border-primary mt-2">
+	<div class="container">
+		<h1 class="jumbotron-heading">What's your personal <span style="font-family: 'Monoton', cursive; word-spacing: .3em; font-size: 55px; font-weight: bold;">Hall <span style="font-weight: normal; ">of</span> Fame</span> ?</h1>
+		<p class="lead">Curate halls of vidoes to share with the world. Show what moves you.</p>	
+			<a href="{% url 'create_hall' %}" class="btn btn-outline-success">Create Hall</a>
+	</div>		
+</section>
+<div class="container">
+	<h4 class="text-light">Popular Halls</h4>
+	{% for hall in popular_halls %}
+	<div class="row my-4">
+		<div class="col">
+			<div class="card bg-secondary border-primary" style="overflow: hidden;">
+				<div class="card-header text-center bg-dark">
+					<a class="text-info" href="{% url 'detail_hall' hall.id %}"><h3 style="font-family: 'Monoton', cursive; word-spacing: .3em;">{{ hall.title }}</h3></a>	
+				</div>
+				<div class="card-body" onclick="window.location='{% url 'detail_hall' hall.id %}';" style="cursor: pointer;">
+					<div class="row justify-content-center">
+						{% for video in hall.video_set.all %}
+							<div class="col-12 col-md-6 col-xl-4">						
+							<iframe class="mt-2 mb-0 pb-0 mx-auto px-auto" width="300" height="225" src="https://www.youtube.com/embed/{{ video.youtube_id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+							</div>
+													
+						{% endfor %}
+					</div>					
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+	<h4 class="text-light">Newest Halls</h4>
+	{% for hall in recent_halls %}
+	<div class="row my-4">
+		<div class="col">
+			<div class="card bg-secondary border-primary" style="overflow: hidden;">
+				<div class="card-header text-center text-info bg-dark">
+					<a class="text-info" href="{% url 'detail_hall' hall.id %}"><h3 style="font-family: 'Monoton', cursive;">{{ hall.title }}</h3></a>	
+				</div>
+				<div class="card-body" onclick="window.location='{% url 'detail_hall' hall.id %}';" style="cursor: pointer;">
+					<div class="row justify-content-center">
+						{% for video in hall.video_set.all %}
+							<div class="col-12 col-md-6 col-xl-4">						
+							<iframe class="mt-2 mb-0 pb-0 mx-auto px-auto" width="300" height="225" src="https://www.youtube.com/embed/{{ video.youtube_id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+							</div>
+													
+						{% endfor %}
+					</div>					
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+
+</div>
+
+
+
+
+{% endblock %}
+<!--  bg-dark text-light -->

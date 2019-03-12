@@ -1,0 +1,30 @@
+{% extends 'halls/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-dark text-light border-bottom border-primary my-2 py-2">
+	<div class="container ">
+		<h2 class="display-4 text-center mb-5 pb-5 text-light"><strong>Create </strong><em style="font-size: 85px; font-family: 'Monoton', cursive;">HALL of FAME</em></h2>
+		{% if user.is_authenticated %}
+		<form method="post">
+			{% csrf_token %}
+			{% load widget_tweaks %}
+			{% for field in form %}
+			<div class="form-group {% if field.errors %}alert alert-danger{% endif%}">
+				{{ field.errors }}
+				{{ field.label_tag }}
+				{% render_field field class="form-control" %}
+			</div>
+			{% endfor %}	
+			<button type="submit" class="btn btn-outline-success btn-outline">Create Hall</button>	
+		</form>
+		{% else %}
+		<h2 class="text-center text-danger">Please Login or Sign Up!<h2>
+		{% endif %}
+	</div>
+		
+</div>
+
+{% endblock %}
+
+

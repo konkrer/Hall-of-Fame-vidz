@@ -1,0 +1,98 @@
+body {
+	margin-top: 0px;
+	background-color: black;
+	font-family: 'ZCOOL QingKe HuangYou', cursive;
+	color: azure;
+}
+
+
+header h1 {
+	color: #FF5110;
+	font-weight: bold;
+	text-align: center;
+	font-size: 60px;
+	text-transform: uppercase;
+	letter-spacing: 1em;
+	font-style: italic;
+	border: 1px red solid;
+	background-color: rgb(25, 90 , 200, .7);
+	border-radius: 40px;
+	margin-top: 0px;
+	padding: 10px;
+}
+
+
+.jumbotron {
+	color: white;
+	text-align: center;
+	height: 600px;
+	background-color: firebrick;
+	display: grid;
+	grid-template: 1fr 3fr 2fr / 50px repeat(12, 1fr) 50px;  
+}
+
+.a {
+	grid-area: 1 / 1 / 3 / 2;
+	background-color: green;	
+	border: 4px solid orange;
+}
+
+.jumbotron .title_wrapper {
+	grid-area: 1 / 10 / 2 / span 4;
+	background-color: orange;
+	width: 200px;
+	justify-content: center;
+	border: 4px black solid;
+	border-bottom: 0px;
+	border-radius: 5px;
+
+
+}
+
+.jumbotron h1 {
+	
+}
+
+
+.jumbotron .img_hood {
+	grid-area: 1/ 2 / 7 / 7; 
+	background-size: cover;
+	background-position: center;
+	background-image:url("images/EviroBrite Galaxy 3.png");
+
+}
+
+.b {
+	grid-area: 2 / 8 / 3 / 13;
+	background-color: blue;
+	font-size: 220px;
+	overflow: auto;
+	border: 5px limegreen solid;
+	border-radius: 25px;
+	margin-top: 30px;
+}
+
+.e {
+	grid-area: 3 / 1 / 4 / 2;		
+	border: 4px solid black;
+
+}
+
+.d {
+	grid-area: 1 / 14 / 2 / 15;
+	border: 5px solid black;
+
+}
+
+.f {
+	grid-area: 2 / 14 / 7 / 15;
+	background: cyan;
+	border: 5px purple solid;
+
+
+}
+
+.main h1 {
+	text-align: center;
+	font-size: 150px;
+}
