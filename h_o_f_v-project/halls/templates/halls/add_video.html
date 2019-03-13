@@ -4,8 +4,8 @@
 {% block content %}
 <div class="jumbotron jumbotron-fluid bg-dark text-light border-bottom border-primary my-2 py-2">
 	<div class="container ">
-		<h2 class="display-3 text-center text-light"><strong>Add Video</strong><em style=" font-size: 20px; word-spacing: 0.5em;"> to<span style="font-size: 50px; font-family: 'Monoton', cursive;"> Hall</span></em></h2>
-		<h2 class="text-center text-info mb-5 border border-danger rounded-pill" style=" font-size: 50px; font-family: 'Monoton', cursive;">{{ hall.title }}</h2>
+		<h2 class="display-3 text-center text-light"><strong>{% if suggest == 0 %}Add{% else %}Suggest{% endif %} Video</strong><em style=" font-size: 20px; word-spacing: 0.5em;"> to<span style="font-size: 50px; font-family: 'Monoton', cursive;"> Hall</span></em></h2>
+		<h2 class="text-center text-info mb-5 px-5 py-3 border border-danger rounded-pill" style=" font-size: 50px; font-family: 'Monoton', cursive;">{{ hall.title }}</h2>
 		<form method="post" id="submit_video" class="mt-1">
 			{% csrf_token %}
 			{% load widget_tweaks %}

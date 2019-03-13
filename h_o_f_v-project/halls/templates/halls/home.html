@@ -4,9 +4,11 @@
 {% block content %}
 <section class="jumbotron jumbotron-fluid text-center bg-dark border-bottom border-top border-primary mt-2">
 	<div class="container">
-		<h1 class="jumbotron-heading">What's your personal <span style="font-family: 'Monoton', cursive; word-spacing: .3em; font-size: 55px; font-weight: bold;">Hall <span style="font-weight: normal; ">of</span> Fame</span> ?</h1>
-		<p class="lead">Curate halls of vidoes to share with the world. Show what moves you.</p>	
-			<a href="{% url 'create_hall' %}" class="btn btn-outline-success">Create Hall</a>
+		<h1 class="jumbotron-heading text-light">What's your personal <span style="font-family: 'Monoton', cursive; word-spacing: .3em; font-size: 55px; font-weight: bold;">Hall <span style="font-weight: normal; ">of</span> Fame</span> ?</h1>
+		<p class="lead">Curate halls of vidoes to share with the world. Show what moves you.</p>
+			<a href="#" class="btn btn-outline-success mr-5 mt-4">Random Hall</a>	
+			<a href="{% url 'create_hall' %}" class="btn btn-outline-success ml-5 mt-4">Create Hall</a>
+
 	</div>		
 </section>
 <div class="container">
@@ -14,9 +16,9 @@
 	{% for hall in popular_halls %}
 	<div class="row my-4">
 		<div class="col">
-			<div class="card bg-secondary border-primary" style="overflow: hidden;">
+			<div class="card bg-secondary border-primary mb-3" style="overflow: hidden;">
 				<div class="card-header text-center bg-dark">
-					<a class="text-info" href="{% url 'detail_hall' hall.id %}"><h3 style="font-family: 'Monoton', cursive; word-spacing: .3em;">{{ hall.title }}</h3></a>	
+					<a class="text-info" href="{% url 'detail_hall' hall.id %}"><h3 style="font-family: 'Monoton', cursive; word-spacing: .28em;">{{ hall.title }}</h3></a>	
 				</div>
 				<div class="card-body" onclick="window.location='{% url 'detail_hall' hall.id %}';" style="cursor: pointer;">
 					<div class="row justify-content-center">
@@ -36,9 +38,9 @@
 	{% for hall in recent_halls %}
 	<div class="row my-4">
 		<div class="col">
-			<div class="card bg-secondary border-primary" style="overflow: hidden;">
-				<div class="card-header text-center text-info bg-dark">
-					<a class="text-info" href="{% url 'detail_hall' hall.id %}"><h3 style="font-family: 'Monoton', cursive;">{{ hall.title }}</h3></a>	
+			<div class="card bg-secondary border-primary mb-3" style="overflow: hidden;">
+				<div class="card-header text-center bg-dark">
+					<a class="card-title" href="{% url 'detail_hall' hall.id %}"><h3>{{ hall.title }}</h3></a>	
 				</div>
 				<div class="card-body" onclick="window.location='{% url 'detail_hall' hall.id %}';" style="cursor: pointer;">
 					<div class="row justify-content-center">

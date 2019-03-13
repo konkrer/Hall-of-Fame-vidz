@@ -1,6 +1,6 @@
 body {
 	background: url('images/star_field.png'); 
-	background-size: cover;
+	background-size: stretch;
 }
 
 .jumbotron {
@@ -15,12 +15,34 @@ body {
   max-width: 51rem;
 }
 
-.monoton {
-	font-size: 85px; 
-	font-family: 'Monoton', cursive;
-}
-
-header h3 a, header a { 
+header a { 
 	font-family: 'Monoton', cursive;
 	color: lightgrey;
+ }
+
+header h3 a {
+ 	color: #F3AE01;
+ }
+
+section h1 span {
+	color: rgba(243, 174, 1, 0.92);
+}
+
+.lg_golden {
+	color: rgba(243, 174, 1, 0.92);
+	font-size: 100px; 
+	font-family: 'Monoton', cursive;
+}
+ 
+ .jumbotron h2 {
+ 	font-size: 50px; 
+ 	font-family: 'Monoton', cursive; 
+ 	overflow: hidden; 
+ 	word-spacing: .1em;	
+ }
+
+ .card-title {
+ 	font-family: 'Monoton', cursive; 
+ 	word-spacing: .28em;
+
  }

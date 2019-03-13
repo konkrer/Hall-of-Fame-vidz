@@ -2,8 +2,9 @@
 *.pot
 *.pyc
 __pycache__/
-local_settings.py
-db.sqlite3
-/media
-/static
-/vtx_guru/static/media
+h_o_f_v-project/db.sqlite3
+h_o_f_v-project/media
+h_o_f_v-project/static
+h_o_f_v-project/halls/local_data.py
+h_o_f_v-project/h_o_f_v/local_settings.py
+

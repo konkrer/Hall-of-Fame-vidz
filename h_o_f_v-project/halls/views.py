@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
-from .models import Hall, Video
+from .models import Hall, Video, SuggestionVideo
 from .forms import VideoForm, SearchForm
 from django.http import Http404, JsonResponse
 from django.forms.utils import ErrorList
@@ -11,13 +11,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 import urllib
 import requests
-
-YOUTUBE_API_KEY = "AIzaSyCY0o2lW3bzkhmqQAkyppKfPamy7u6P5Es"
+from .local_data import *
 
 def home(request):
 	recent_halls = Hall.objects.all().order_by('-id')[:3]
-	popular_halls = [Hall.objects.get(pk=1), Hall.objects.get(pk=2), Hall.objects.get(pk=3)] 
-	return render(request, 'halls/home.html', {'recent_halls': recent_halls, 'popular_halls': popular_halls})
+	#popular_halls = [Hall.objects.get(pk=1), Hall.objects.get(pk=1), Hall.objects.get(pk=3)] , 'popular_halls': popular_halls
+	return render(request, 'halls/home.html', {'recent_halls': recent_halls})
 
 @login_required
 def dashboard(request):	
@@ -28,21 +27,24 @@ def dashboard(request):
 	return render(request, 'halls/dashboard.html', {'halls': halls})
 
 @login_required
-def add_video(request, pk):	
+def add_video(request, pk, suggest):	
 	form = VideoForm()
 	search_form = SearchForm()
 	try:
 		hall = Hall.objects.get(pk=pk)
 	except NameError:
 		return redirect('home')
-	if hall.user != request.user:
+	if (hall.user != request.user) and (suggest==0):
 		raise Http404
 
 	if request.method == 'POST':
 		# Create
 		form = VideoForm(request.POST)
 		if form.is_valid():
-			video = Video()
+			if not suggest:
+				video = Video()
+			else:
+				video = SuggestionVideo()
 			video.hall = hall
 			video.url = form.cleaned_data['url']
 			parsed_url = urllib.parse.urlparse(video.url)
@@ -54,12 +56,32 @@ def add_video(request, pk):
 				title = json['items'][0]['snippet']['title']
 				video.title = title
 				video.save()
-				return redirect('dashboard')
+				return redirect('detail_hall', hall.id)
 			else:
 				errors = form._errors.setdefault('url', ErrorList())
 				errors.append('Needs to be valid Youtube URL')
 
-	return render(request, 'halls/add_video.html', {'form':form, 'search_form':search_form, 'hall': hall})
+	return render(request, 'halls/add_video.html', {'form':form, 'search_form':search_form, 'hall': hall, 'suggest': suggest})
+
+
+@login_required
+def add_suggestion_video(request, pk):
+	try:
+		suggested_video = SuggestionVideo.objects.get(pk=pk)
+	except NameError:
+		return redirect('home')
+	if (suggested_video.hall.user != request.user):
+		raise Http404
+	video = Video()
+	video.hall = suggested_video.hall
+	video.title = suggested_video.title
+	video.url = suggested_video.url
+	video.youtube_id = suggested_video.youtube_id
+	video.save()
+	SuggestionVideo.objects.filter(id=pk).delete()
+
+	return redirect('dashboard')
+
 
 @login_required
 def video_search(request):
@@ -78,6 +100,17 @@ class DeleteVideo(generic.DeleteView):
 
 	def get_object(self):
 		video = super(DeleteVideo, self).get_object()
+		if not video.hall.user == self.request.user:
+			raise Http404
+		return video
+
+class DeleteSuggestionVideo(generic.DeleteView):
+	model = SuggestionVideo
+	template_name = 'halls/delete_video.html'
+	success_url = reverse_lazy('dashboard')
+
+	def get_object(self):
+		video = super(DeleteSuggestionVideo, self).get_object()
 		if not video.hall.user == self.request.user:
 			raise Http404
 		return video
@@ -103,6 +136,7 @@ class CreateHall(LoginRequiredMixin, generic.CreateView):
 
 	def form_valid(self, form):
 		form.instance.user = self.request.user
+		form.instance.votes = [self.request.user.id]
 		super(CreateHall, self).form_valid(form)
 		return redirect('dashboard')
 

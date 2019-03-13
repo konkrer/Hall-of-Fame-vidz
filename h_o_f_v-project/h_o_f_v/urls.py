@@ -17,8 +17,8 @@ from django.contrib import admin
 from django.contrib.auth import views as vws
 from django.urls import path
 from halls import views
-from django.conf.urls.static import static
-from django.conf import settings
+#from django.conf.urls.static import static
+#from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,10 +34,12 @@ urlpatterns = [
     path('halloffame/<int:pk>/update', views.UpdateHall.as_view(), name="update_hall"),
     path('halloffame/<int:pk>/delete', views.DeleteHall.as_view(), name="delete_hall"),
     # video things
-    path('halloffame/<int:pk>/addvideo', views.add_video, name="add_video"),
+    path('halloffame/<int:pk>/<int:suggest>/addvideo', views.add_video, name="add_video"),
+    path('halloffame/<int:pk>/addsuggestionvideo', views.add_suggestion_video, name="add_suggestion_video"),
     path('video/search', views.video_search, name="video_search"),
     path('video/<int:pk>/deletevideo', views.DeleteVideo.as_view(), name="delete_video"),
+    path('video/<int:pk>/deletesuggestionvideo', views.DeleteSuggestionVideo.as_view(), name="delete_suggestion_video"),
    
 ]
 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+#urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -4,7 +4,7 @@
 {% block content %}
 <div class="jumbotron jumbotron-fluid bg-dark text-light border-bottom border-primary my-2 py-2">
 	<div class="container">
-		<h2 class="text-center mt-2 px-5 py-3 border border-danger rounded-pill" style=" font-size: 50px; font-family: 'Monoton', cursive; overflow: hidden; word-spacing: .2em;">Dashboard</h2>
+		<h2 class="text-center mt-2 px-5 py-3 border border-danger rounded-pill">Dashboard</h2>
 		<h4 class="lead text-info text-center mb-5 font-italic ">{{ user.username }}</h4>
 		<div class="row justify-content-center mb-1 mt-5">
 			<a href="{% url 'create_hall' %}" class="btn btn-outline-success">Create a new Hall</a>
@@ -16,27 +16,46 @@
 	{% for hall in halls %}
 	<div class="row my-4">
 		<div class="col">
-			<div class="card bg-secondary border-primary" style="overflow: hidden;">
+			<div class="card bg-secondary border-primary mb-3" style="overflow: hidden;">
 				<div class="card-header text-center text-info bg-dark">
-					<a class="text-info" href="{% url 'detail_hall' hall.id %}"><h3 style="font-family: 'Monoton', cursive; word-spacing: .3em;">{{ hall.title }}</h3></a>
-					<a class="text-center" data-toggle="collapse" href="#collapseManage" role="button" aria-expanded="false" aria-controls="collapseManage">
-					Manage
+					<a class="card-title" href="{% url 'detail_hall' hall.id %}"><h3 style="font-family: 'Monoton', cursive; word-spacing: .3em;">{{ hall.title }}</h3></a>
+					<a class="card-subtitle text-center" data-toggle="collapse" href="#collapseManage" role="button" aria-expanded="false" aria-controls="collapseManage">
+					<small>Manage</small>
 					</a>
 					<div class="collapse" id="collapseManage">
-						<div class="card card-body bg-secondary">
-							<div class="row">
-								<div class="col-sm-4 mt-1">
-					    			<a class="btn btn-success" href="{% url 'update_hall' hall.id %}">Change Hall Title</a>
+						<div class="bg-secondary rounded-pill p-3">
+							<div class="row justify-content-center">
+					    		<div class="col-md-3 my-2">
+					    			<a class="btn btn-info" data-toggle="collapse" href="#collapseSuggestions" aria-expanded="false" aria-controls="collapseSuggestions">See Suggestions</a>
+					    		</div>								
+								<div class="col-md-3 my-2">
+					    			<a class="btn btn-primary" href="{% url 'update_hall' hall.id %}">Change Hall Title</a>
 					    		</div>
-								<div class="col-sm-4 mt-1">
-					    			<a class="btn btn-success" href="{% url 'add_video' hall.id %}">Add Video</a>
+								<div class="col-md-3 my-2">
+					    			<a class="btn btn-primary" href="{% url 'add_video' hall.id 0 %}">Add Video</a>
 					    		</div>
-					    		<div class="col-sm-4 mt-1">
+					    		<div class="col-md-3 my-2">
 					    			<a class="btn btn-danger" href="{% url 'delete_hall' hall.id %}">Delete Hall</a>
 					    		</div>					    	
 					    	</div>
 						</div>
-					</div>					
+					</div>
+					<div class="collapse" id="collapseSuggestions">
+						<p>User suggested videos for this Hall:</p>
+						<div class="row justify-content-center">
+							{% for video in hall.suggestionvideo_set.all %}						
+							<div class="col-12 col-md-6 col-xl-4">						
+								<iframe class="mt-2 mb-0 pb-0 mx-auto px-auto" width="300" height="225" src="https://www.youtube.com/embed/{{ video.youtube_id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+								<div class="collapse" id="collapseManage">
+									<a href="{% url 'delete_suggestion_video' video.id %}" class="btn btn-danger mt-0 py-0 mb-3">
+										<small>Delete video ^</small></a>								
+									<a href="{% url 'add_suggestion_video' video.id %}" class="btn btn-primary mt-0 py-0 mb-3">
+										<small>Add video ^</small></a>									
+								</div>
+							</div>							
+							{% endfor %}
+						</div>
+					</div>				
 				</div>
 				<div class="card-body" onclick="window.location='{% url 'detail_hall' hall.id %}';" style="cursor: pointer;">
 					<div class="row justify-content-center">
