@@ -1,0 +1,23 @@
+{% extends 'halls/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-dark text-light border-bottom border-primary my-2 py-3">
+	<div class="container ">
+		<h1 class="display-4 text-center text-light mb-3">Delete User Account?</h2>
+		<h2 class="text-center text-info mb-5 border border-danger rounded-pill" style=" font-size: 50px; font-family: 'Monoton', cursive;">{{ user.username }}</h2>
+		{% if user.is_authenticated %}
+		<div class="row justify-content-center">
+			<form action="{% url 'delete_user_confirmed' user.id %}">
+				{% csrf_token %}
+				<button class="btn btn-danger">Delete User Account</button>	
+			</form>
+		</div>
+		{% else %}
+		<h2 class="text-center text-danger">Please Login or Sign Up!<h2>
+		{% endif %}
+		<br>
+		<a href="{% url 'dashboard' %}"><h3 class="mt-1">Go back to Dashboard</h3></a>
+	</div>
+</div>
+{% endblock %}

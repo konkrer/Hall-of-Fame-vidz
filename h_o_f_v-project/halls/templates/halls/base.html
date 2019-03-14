@@ -13,10 +13,12 @@
 </head>
 
 <body>
-  <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 bg-danger shadow-sm" style="font-size: 24px;">
-    <h3 class="my-0 mr-md-auto"><a href="{% url 'home' %}" class="text-decoration-none">Hall of Fame<em>vidz</em></a></h3>
+  <header class="d-flex flex-column flex-md-row align-items-center p-1 px-md-4 bg-danger shadow-sm sticky-top" style="font-size: 24px;">
+    <img src="{% static 'winner.png' %}" width="50" height="50" class="d-inline-block align-top mr-2"/>
+    <h3 class="my-0 mr-md-auto"><a href="{% url 'home' %}" class="text-decoration-none"> Hall of Fame<em>vidz</em></a></h3>
     <nav class="my-2 my-md-0 mr-md-3">
       {% if user.is_authenticated %}
+      <small class="text-dark font-italic">{{ user.username }}</small>
       <a class="p-2 text-decoration-none" href="{% url 'dashboard' %}">Dashboard</a>
       <a class="p-2 text-decoration-none" href="{% url 'logout' %}">Log Out</a>
       {% else %}
@@ -28,6 +30,10 @@
     {% endif %}
   </header>
 
+  {% if error %}
+  <h1 class="alert alert-danger text-center">{{ error }}</h1>
+  {% endif %}
+
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -37,6 +43,12 @@
   
   {% block content %}
   {% endblock %}
+
+<footer class="text-muted">
+  <div class="container text-center">
+    <p>&copy; {% now "Y" %} Konkrer</p>
+  </div>
+</footer>
 
 
 </body>

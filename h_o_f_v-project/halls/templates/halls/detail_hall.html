@@ -8,29 +8,68 @@
 		<h2 class="text-center text-info mb-3 px-5 py-3 border border-danger rounded-pill font-italic">{{ hall.title }}</h2>
 		<h4 class="text-muted text-center mb-1 font-italic">by {{ hall.user.username }}</h4>
 		{% if hall.user.username == user.username %}
-			<a  data-toggle="collapse" href="#collapseManage" role="button" aria-expanded="false" aria-controls="collapseManage">
-			<div class="lead text-right">Manage</div>
-			</a>
+		<div class="row">
+			<div class="col-4">
+				{% if hall.votes_total > 1 %}
+				<h5 class="text-left lead">{{ hall.votes_total}} people dug this hall</h5>
+				{% else %}
+				<h5 class="text-left lead">You dig this hall</h5>
+				{% endif %}
+			</div>
+			<div class="col-5">
+			</div>
+			<div class="col-3">
+				<a  data-toggle="collapse" href="#collapseManage" role="button" aria-expanded="false" aria-controls="collapseManage">
+				<div class="lead text-right mr-auto">Manage</div>
+				</a>
+			</div>
+			</div>
+			{% if hall.suggestionvideo_set.all %}
+				<a class="text-info text-decoration-none" data-toggle="collapse" href="#collapseSuggestions" role="button" aria-expanded="false" aria-controls="collapseManage">
+				<p class="text-center">You have video suggestions!</p></a>
+			{% endif %}
 			<div class="collapse" id="collapseManage">
 				<div class="card card-body bg-secondary text-center rounded-pill p-3">
 					<div class="row">
-						<div class="col-sm-4 mt-1">
-			    			<a class="btn btn-success" href="{% url 'update_hall' hall.id %}">Change Hall Title</a>
+					    <div class="col-md-3 mt-1">
+					    	<a class="btn btn-info btn-sm" data-toggle="collapse" href="#collapseSuggestions" aria-expanded="false" aria-controls="collapseSuggestions">See Suggestions</a>
+					    </div>						
+						<div class="col-md-3 mt-1">
+			    			<a class="btn btn-primary btn-sm" href="{% url 'update_hall' hall.id %}">Change Hall Title</a>
 			    		</div>
-						<div class="col-sm-4 mt-1">
-			    			<a class="btn btn-success" href="{% url 'add_video' hall.id 0 %}">Add Video</a>
+						<div class="col-md-3 mt-1">
+			    			<a class="btn btn-primary btn-sm" href="{% url 'add_video' hall.id 0 %}">Add Video</a>
 			    		</div>
-			    		<div class="col-sm-4 mt-1">
-			    			<a class="btn btn-danger" href="{% url 'delete_hall' hall.id %}">Delete Hall</a>
+			    		<div class="col-md-3 mt-1">
+			    			<a class="btn btn-danger btn-sm" href="{% url 'delete_hall' hall.id %}">Delete Hall</a>
 			    		</div>					    	
 			    	</div>
 				</div>
 			</div>
+			<div class="collapse" id="collapseSuggestions">
+				<p class="text-center">User suggested videos for this Hall:</p>
+				<div class="row justify-content-center">
+					{% for video in hall.suggestionvideo_set.all %}						
+					<div class="col-12 col-md-6 col-xl-4">						
+						<iframe class="mt-2 mb-0 pb-0 mx-auto px-auto" width="300" height="225" src="https://www.youtube.com/embed/{{ video.youtube_id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+						<div class="collapse" id="collapseManage">
+							<a href="{% url 'delete_suggestion_video' video.id %}" class="btn btn-danger mt-0 py-0 mb-3">
+								<small>Delete video ^</small></a>								
+							<a href="{% url 'add_suggestion_video' video.id %}" class="btn btn-primary mt-0 py-0 mb-3">
+								<small>Add video ^</small></a>									
+						</div>
+					</div>							
+					{% endfor %}
+				</div>
+			</div>				
 		{% else %}
 			{% if user.is_authenticated %}
 			<div class="row mb-2">
 				<div class="col-6">
-					<a href="#" role="button" class="btn btn-outline-success">I Dig It!</a>
+					<form id="upvote{{ hall.id }}" method="POST" action="{% url 'upvote_hall' hall.id %}">
+						{% csrf_token %}
+					<button class="btn btn-outline-success">I Dig It! {{ hall.votes_total }}</button>
+					</form>
 				</div>
 				<div class="col-6">
 					<a class="text-right" data-toggle="collapse" href="#collapseSuggest" role="button" aria-expanded="false" aria-controls="collapseSuggest">

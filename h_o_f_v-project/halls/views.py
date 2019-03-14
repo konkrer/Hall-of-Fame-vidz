@@ -1,27 +1,40 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate, login
-from .models import Hall, Video, SuggestionVideo
+from django.contrib.auth import authenticate, login, logout
+from .models import Hall, Video, SuggestionVideo, User
 from .forms import VideoForm, SearchForm
 from django.http import Http404, JsonResponse
 from django.forms.utils import ErrorList
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from random import choice as randchoice
 import urllib
 import requests
 from .local_data import *
 
 def home(request):
-	recent_halls = Hall.objects.all().order_by('-id')[:3]
-	#popular_halls = [Hall.objects.get(pk=1), Hall.objects.get(pk=1), Hall.objects.get(pk=3)] , 'popular_halls': popular_halls
+	popular_halls = Hall.objects.all().order_by('-votes_total')[:50]
+	return render(request, 'halls/home.html', {'popular_halls': popular_halls})
+
+def newest(request):
+	recent_halls = Hall.objects.all().order_by('-id')[:50]
 	return render(request, 'halls/home.html', {'recent_halls': recent_halls})
+
+def random(request):
+	halls = Hall.objects.all()
+	hall_ids = []
+	for hall in halls:
+		hall_ids.append(hall.id)
+	random_id = randchoice(hall_ids)
+	return redirect('detail_hall', random_id)
+
 
 @login_required
 def dashboard(request):	
 	try:
-		halls = Hall.objects.filter(user=request.user)
+		halls = Hall.objects.filter(user=request.user)[::-1]
 	except TypeError:
 		return redirect('login')
 	return render(request, 'halls/dashboard.html', {'halls': halls})
@@ -55,6 +68,8 @@ def add_video(request, pk, suggest):
 				json = response.json()
 				title = json['items'][0]['snippet']['title']
 				video.title = title
+				thumb_url = json['items'][0]['snippet']['thumbnails']['medium']['url']
+				video.thumbnail_url = thumb_url
 				video.save()
 				return redirect('detail_hall', hall.id)
 			else:
@@ -93,7 +108,7 @@ def video_search(request):
 	return JsonResponse({'error': 'Not able to validate form'})
 
 
-class DeleteVideo(generic.DeleteView):
+class DeleteVideo(LoginRequiredMixin, generic.DeleteView):
 	model = Video
 	template_name = 'halls/delete_video.html'
 	success_url = reverse_lazy('dashboard')
@@ -104,7 +119,7 @@ class DeleteVideo(generic.DeleteView):
 			raise Http404
 		return video
 
-class DeleteSuggestionVideo(generic.DeleteView):
+class DeleteSuggestionVideo(LoginRequiredMixin, generic.DeleteView):
 	model = SuggestionVideo
 	template_name = 'halls/delete_video.html'
 	success_url = reverse_lazy('dashboard')
@@ -127,6 +142,37 @@ class SignUp(generic.CreateView):
 		login(self.request, user)
 		return view
 
+@login_required
+def delete_user(request):
+	return render(request, 'registration/delete_user.html')
+
+@login_required
+def delete_user_confirmed(request, pk):
+	if not request.user.id == pk:
+		logout(request)
+		redirect('home')
+	try:
+		u = User.objects.get(pk=pk)
+		logout(request)
+		u.delete()	
+		error = 'The user is deleted.'       
+	except User.DoesNotExist: 
+		error = 'User does not exist.'
+	except Exception as e: 
+		error = e
+	return render(request, 'halls/home.html', {'error': error}) 
+
+class DeleteUserClassy(LoginRequiredMixin, generic.DeleteView):
+	model = User
+	template_name = 'registration/delete_user.html'
+	success_url = reverse_lazy('home')
+
+	def get_object(self):
+		user = super(DeleteUserClassy, self).get_object()
+		if not user == self.request.user:
+			raise Http404
+		return user
+
 # CRUD - create read update destroy
 class CreateHall(LoginRequiredMixin, generic.CreateView):
 	model = Hall
@@ -136,7 +182,7 @@ class CreateHall(LoginRequiredMixin, generic.CreateView):
 
 	def form_valid(self, form):
 		form.instance.user = self.request.user
-		form.instance.votes = [self.request.user.id]
+		form.instance.votes = str(self.request.user.id)
 		super(CreateHall, self).form_valid(form)
 		return redirect('dashboard')
 
@@ -168,3 +214,17 @@ class DeleteHall(LoginRequiredMixin, generic.DeleteView):
 		return model
 
 
+@login_required()
+def upvote_hall(request, pk):
+	if request.method == 'POST':
+		hall = get_object_or_404(Hall, pk=pk)
+		trying_to_upvote = request.user.id
+		lst_upvoted = hall.votes.split(',')
+		
+		if str(trying_to_upvote) not in lst_upvoted:
+			strg = hall.votes + "," + str(trying_to_upvote)
+			hall.votes = strg
+			hall.votes_total += 1
+			hall.save()
+		return redirect('detail_hall', hall.id)
+	

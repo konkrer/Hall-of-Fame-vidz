@@ -23,16 +23,23 @@ from halls import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('newest', views.newest, name='newest'),
+    path('random', views.random, name='random'),
     path('dashboard', views.dashboard, name='dashboard'),
     # AUTH
     path('signup', views.SignUp.as_view(), name="signup"),
+    path('delete', views.delete_user, name="delete_user"),
+    path('delete/<int:pk>', views.delete_user_confirmed, name="delete_user_confirmed"),
+    path('deletewithclass/<int:pk>', views.DeleteUserClassy.as_view(), name="delete_user_classy"),
     path('login', vws.LoginView.as_view(), name="login"),
     path('logout', vws.LogoutView.as_view(), name="logout"),
     # HALLS
     path('halloffame/create', views.CreateHall.as_view(), name="create_hall"),
     path('halloffame/<int:pk>', views.DetailHall.as_view(), name="detail_hall"),
+    path('halloffame/<int:pk>/digit', views.upvote_hall, name="upvote_hall"),
     path('halloffame/<int:pk>/update', views.UpdateHall.as_view(), name="update_hall"),
     path('halloffame/<int:pk>/delete', views.DeleteHall.as_view(), name="delete_hall"),
+
     # video things
     path('halloffame/<int:pk>/<int:suggest>/addvideo', views.add_video, name="add_video"),
     path('halloffame/<int:pk>/addsuggestionvideo', views.add_suggestion_video, name="add_suggestion_video"),

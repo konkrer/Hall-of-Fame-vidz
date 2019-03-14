@@ -2,12 +2,18 @@
 {% load staticfiles %}
 
 {% block content %}
-<div class="jumbotron jumbotron-fluid bg-dark text-light border-bottom border-primary my-2 py-2">
+<div class="jumbotron jumbotron-fluid bg-dark text-light border-bottom border-top border-primary my-2 py-2">
 	<div class="container">
 		<h2 class="text-center mt-2 px-5 py-3 border border-danger rounded-pill">Dashboard</h2>
 		<h4 class="lead text-info text-center mb-5 font-italic ">{{ user.username }}</h4>
-		<div class="row justify-content-center mb-1 mt-5">
+		<div class="row text-center mb-1 mt-5">
+			<div class="col-2"></div>
+			<div class="col-8">
 			<a href="{% url 'create_hall' %}" class="btn btn-outline-success">Create a new Hall</a>
+			</div>
+			<div class="col-2">
+				<a href="{% url 'delete_user' %}"><small class="text-danger">Delete Account</small></a>
+			</div>
 		</div>
 	</div>		
 </div>
@@ -18,24 +24,39 @@
 		<div class="col">
 			<div class="card bg-secondary border-primary mb-3" style="overflow: hidden;">
 				<div class="card-header text-center text-info bg-dark">
-					<a class="card-title" href="{% url 'detail_hall' hall.id %}"><h3 style="font-family: 'Monoton', cursive; word-spacing: .3em;">{{ hall.title }}</h3></a>
-					<a class="card-subtitle text-center" data-toggle="collapse" href="#collapseManage" role="button" aria-expanded="false" aria-controls="collapseManage">
-					<small>Manage</small>
-					</a>
+					<a class="card-title text-info" href="{% url 'detail_hall' hall.id %}"><h3>{{ hall.title }}</h3></a>
+					<div class="row">
+						<div class="col-4"></div>
+						<div class="col-4">
+							<a class="card-subtitle" data-toggle="collapse" href="#collapseManage" role="button" aria-expanded="false" aria-controls="collapseManage">
+							<small>Manage</small></a>
+						</div>
+						<div class="col-4 text-left text-muted">
+							{% if hall.votes_total > 1 %}
+							<p ><span class="text-info">{{ hall.votes_total }}</span> People dig this</p>
+							{% else %}
+							<p>You dig this hall</p>
+							{% endif %}
+						</div>
+					</div>
+					{% if hall.suggestionvideo_set.all %}
+					<a class="text-info text-decoration-none" data-toggle="collapse" href="#collapseSuggestions" role="button" aria-expanded="false" aria-controls="collapseManage">
+					<p>You have video suggestions!</p></a>
+					{% endif %}
 					<div class="collapse" id="collapseManage">
 						<div class="bg-secondary rounded-pill p-3">
 							<div class="row justify-content-center">
 					    		<div class="col-md-3 my-2">
-					    			<a class="btn btn-info" data-toggle="collapse" href="#collapseSuggestions" aria-expanded="false" aria-controls="collapseSuggestions">See Suggestions</a>
+					    			<a class="btn btn-info btn-sm" data-toggle="collapse" href="#collapseSuggestions" aria-expanded="false" aria-controls="collapseSuggestions">See Suggestions</a>
 					    		</div>								
 								<div class="col-md-3 my-2">
-					    			<a class="btn btn-primary" href="{% url 'update_hall' hall.id %}">Change Hall Title</a>
+					    			<a class="btn btn-primary btn-sm" href="{% url 'update_hall' hall.id %}">Change Hall Title</a>
 					    		</div>
 								<div class="col-md-3 my-2">
-					    			<a class="btn btn-primary" href="{% url 'add_video' hall.id 0 %}">Add Video</a>
+					    			<a class="btn btn-primary btn-sm" href="{% url 'add_video' hall.id 0 %}">Add Video</a>
 					    		</div>
 					    		<div class="col-md-3 my-2">
-					    			<a class="btn btn-danger" href="{% url 'delete_hall' hall.id %}">Delete Hall</a>
+					    			<a class="btn btn-danger btn-sm" href="{% url 'delete_hall' hall.id %}">Delete Hall</a>
 					    		</div>					    	
 					    	</div>
 						</div>
